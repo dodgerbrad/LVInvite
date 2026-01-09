@@ -1,27 +1,12 @@
 // Function to send data to Google Sheets (Defined outside DOMContentLoaded scope)
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUlYT3Q52Mq5pmOXhGD9AlAC115aztn9Pu6it3_h6nMXwPzNp7tTOI__yJhv7Nna_Rgw/exec";
-const CACHE_NAME = 'scorecard-cache-v1';
-const urlsToCache = [
-    '/',
-    '/index.html',
-    '/score.css',
-    '/score.js',
-    '/manifest.json',
-    '/LV-192.png',
-    '/LV-512.png'
-];
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('Service Worker Registered'))
+        .catch(error => console.error('SW Registration Failed:', error));
+}
 
-self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-    );
-});
 
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(response => response || fetch(event.request))
-    );
-});
 
 // Dedicated Batch Sync Function
 async function syncBatch(golfer, scores) {
@@ -42,13 +27,13 @@ async function populateGolferSelect() {
     const selectElement = document.getElementById('golfer');
     // We use the same URL, but a GET request triggers the doGet function
     try {
-        const response = await fetch(GOOGLE_SCRIPT_URL); 
+        const response = await fetch(GOOGLE_SCRIPT_URL);
         const golfers = await response.json();
 
         if (Array.isArray(golfers)) {
             // Add a default option
             selectElement.innerHTML = '<option value="none">Select Golfer</option>';
-            
+
             // Add options from the Google Sheet data
             golfers.forEach(name => {
                 const option = document.createElement('option');
@@ -219,8 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Sync every 4 holes OR on the 18th hole
             if (pendingScores.length === 4 || holesCompleted === TOTAL_HOLES_IN_ROUND) {
-                syncBatch(selectedGolferName, [...pendingScores]); 
-                pendingScores = []; 
+                syncBatch(selectedGolferName, [...pendingScores]);
+                pendingScores = [];
             }
 
             if (holesCompleted >= TOTAL_HOLES_IN_ROUND) {
