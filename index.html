@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2e7d32">
+    <title>18-Hole Golf Scorecard</title>
+    <link rel="stylesheet" href="score.css">
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>Golf Scorecard</h2>
+
+        <!-- Golfer Selection Dropdown -->
+        <label for="golfer">Select Your Name: </label>
+        <select id="golfer">
+            <option value="none">Select Golfer</option>
+
+        </select>
+
+        <!-- Confirmation Dialog -->
+        <dialog id="confirmDialog">
+            <p>Is your name <strong id="namePlaceholder"></strong>?</p>
+            <form method="dialog">
+                <button value="no">No, that's not me</button>
+                <button value="yes">Yes, that's me</button>
+            </form>
+        </dialog>
+
+        <!-- Starting Hole Dialog -->
+        <dialog id="startHoleDialog">
+            <form method="dialog">
+                <h2>What hole are you starting on?</h2>
+                <!-- Removed the 'max' attribute constraint here so the JS logic handles 1-18 correctly -->
+                <input type="number" id="startHoleInput" min="1" value="1">
+                <button type="submit">Start</button>
+            </form>
+        </dialog>
+        <!-- Final Confirmation Dialog -->
+        <dialog id="finalScoreDialog">
+            <h2>Round Complete!</h2>
+            <p>Please confirm your final scores:</p>
+            <ul>
+                <li>Front 9 Total: <strong id="finalFront">0</strong></li>
+                <li>Back 9 Total: <strong id="finalBack">0</strong></li>
+                <li>Total Score: <strong id="finalTotal">0</strong></li>
+            </ul>
+            <form method="dialog">
+                <button value="ok" id="finalConfirmButton">Confirm & Finish</button>
+                <button value="fix" id="reset">Fix Scores</button>
+            </form>
+        </dialog>
+
+
+        <!-- Score Inputs Grid -->
+        <div class="grid" id="score-inputs">
+            <!-- All inputs start DISABLED by default in HTML -->
+            <label for="1h">1</label> <input type="number" hole-data="1h" id="1h" disabled>
+            <label for="10h">10(1)</label> <input type="number" hole-data="10h" id="10h" disabled>
+            <label for="2h">2</label> <input type="number" hole-data="2h" id="2h" disabled>
+            <label for="11h">11(2)</label> <input type="number" hole-data="11h" id="11h" disabled>
+            <label for="3h">3</label> <input type="number" hole-data="3h" id="3h" disabled>
+            <label for="12h">12(3)</label> <input type="number" hole-data="12h" id="12h" disabled>
+            <label for="4h">4</label> <input type="number" hole-data="4h" id="4h" disabled>
+            <label for="13h">13(4)</label> <input type="number" hole-data="13h" id="13h" disabled>
+            <label for="5h">5</label> <input type="number" hole-data="5h" id="5h" disabled>
+            <!-- Added missing label text for 14 -->
+            <label for="14h">14(5)</label> <input type="number" hole-data="14h" id="14h" disabled>
+            <label for="6h">6</label> <input type="number" hole-data="6h" id="6h" disabled>
+            <label for="15h">15(6)</label> <input type="number" hole-data="15h" id="15h" disabled>
+            <label for="7h">7</label> <input type="number" hole-data="7h" id="7h" disabled>
+            <label for="16h">16(7)</label> <input type="number" hole-data="16h" id="16h" disabled>
+            <label for="8h">8</label> <input type="number" hole-data="8h" id="8h" disabled>
+            <label for="17h">17(8)</label> <input type="number" hole-data="17h" id="17h" disabled>
+            <label for="9h">9</label> <input type="number" hole-data="9h" id="9h" disabled>
+            <label for="18h">18(9)</label> <input type="number" hole-data="18h" id="18h" disabled>
+        </div>
+
+        <!-- Totals Display Area -->
+        <div class="totals">
+            <!-- Added IDs for JavaScript to update the score text -->
+            <div class="total-line">Front 9: <span id="frontTotalDisplay" class="total-val">0</span></div>
+            <div class="total-line">Back 9: <span id="backTotalDisplay" class="total-val">0</span></div>
+            <hr>
+            <div class="total-line">Total Score: <span id="grandTotalDisplay" class="total-val">0</span></div>
+        </div>
+        <!-- Place this below your .totals div and above the Reset button -->
+        <button id="doneFixingBtn"
+            style="display: none; width: 100%; margin-top: 15px; padding: 12px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            Done Fixing - See Final Score
+        </button>
+        <button onclick="window.location.reload()"
+            style="width:100%; margin-top:15px; padding:10px; background:#ddd; border:none; border-radius:4px; cursor:pointer;">Reset
+            Card</button>
+    </div>
+
+
+
+    <!-- Ensure the 'defer' attribute is present -->
+    <script src="score.js" defer></script>
+
+</body>
+
+</html>
